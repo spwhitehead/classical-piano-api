@@ -1,0 +1,22 @@
+[
+    {
+        "name": "Sergei Rachmaninoff",
+        "composer_id": 1,
+        "from": "Russia"
+    },
+    {
+        "name": "Franz Liszt",
+        "composer_id": 2,
+        "from": "Hungary"
+    },
+    {
+        "name": "Ludwig van Beethoven",
+        "composer_id": 3,
+        "from": "Germany"
+    },
+    {
+        "name": "Frédéric Chopin",
+        "composer_id": 4,
+        "from": "Poland"
+    }
+]

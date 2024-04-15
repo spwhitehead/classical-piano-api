@@ -1,0 +1,50 @@
+[
+    {
+        "name": "Etude Tableaux Op. 39 No. 6",
+        "alt_name": "Little Red Riding Hood",
+        "difficulty": 9,
+        "composer_id": 1
+    },
+    {
+        "name": "Waltz Op. 18 No. 1 in E-Flat Major",
+        "alt_name": "Grande valse brillante",
+        "difficulty": 4,
+        "composer_id": 4
+    },
+    {
+        "name": "Mephisto Waltz",
+        "alt_name": null,
+        "difficulty": 10,
+        "composer_id": 2
+    },
+    {
+        "name": "Sonata Op. 27 No. 2 in C# Minor",
+        "alt_name": "Moonlight Sonata",
+        "difficulty": 6,
+        "composer_id": 3
+    },
+    {
+        "name": "2nd Sonata in Bb Minor",
+        "alt_name": null,
+        "difficulty": 10,
+        "composer_id": 1
+    },
+    {
+        "name": "Sonata Op. 57 No. 23 in F Minor",
+        "alt_name": "Appassionata",
+        "difficulty": 7,
+        "composer_id": 3
+    },
+    {
+        "name": "La Campanella",
+        "alt_name": null,
+        "difficulty": 9,
+        "composer_id": 2
+    },
+    {
+        "name": "Ballade No. 1",
+        "alt_name": "Grande valse brillante",
+        "difficulty": 7,
+        "composer_id": 4
+    }
+]
