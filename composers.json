@@ -2,21 +2,21 @@
     {
         "name": "Sergei Rachmaninoff",
         "composer_id": 1,
-        "from": "Russia"
+        "home_country": "Russia"
     },
     {
         "name": "Franz Liszt",
         "composer_id": 2,
-        "from": "Hungary"
+        "home_country": "Hungary"
     },
     {
         "name": "Ludwig van Beethoven",
         "composer_id": 3,
-        "from": "Germany"
+        "home_country": "Germany"
     },
     {
         "name": "Frédéric Chopin",
         "composer_id": 4,
-        "from": "Poland"
+        "home_country": "Poland"
     }
 ]
