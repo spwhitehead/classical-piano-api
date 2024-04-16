@@ -9,6 +9,6 @@ class Composer(BaseModel):
 
 class Piece(BaseModel):
     name: str
-    alt_name: str
+    alt_name: str | None
     difficulty: int
-    composer_id: Composer
+    composer_id: int
