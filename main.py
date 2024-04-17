@@ -1,41 +1,79 @@
 import json
+import logging
+import os
 
+from contextlib import asynccontextmanager
+from decouple import Config, RepositoryEnv
 from fastapi import FastAPI, HTTPException
 from models import Composer, Piece
+from sqlmodel import SQLModel, select, Session, create_engine
+
+logging.basicConfig(level=logging.INFO)
+
+base_dir = os.path.dirname(os.path.abspath(__file__))
+env_file = os.path.join(base_dir, 'migrations', '.env')
+config = Config(RepositoryEnv(env_file))
+
+DATABASE_URL = config("DATABASE_URL")
+
+engine = create_engine(DATABASE_URL)
 
 
-with open("composers.json", "r") as f:
-    composers_list: list[dict] = json.load(f)
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    SQLModel.metadata.create_all(engine)
+    await check_and_load_initial_data()
+    yield
+    await shutdown_logic()
 
-with open("pieces.json", "r") as f:
-    piece_list: list[dict] = json.load(f)
+
+async def check_and_load_initial_data():
+    with Session(engine) as session:
+        exisiting_composer = session.exec(select(Composer)).first()
+        if not exisiting_composer:
+            await load_initial_data_from_json()
 
 
-app = FastAPI()
+async def load_initial_data_from_json():
+    with open("composers.json", "r") as f:
+        composers_list: list[dict] = json.load(f)
 
-composers: list[Composer] = []
-pieces: list[Piece] = []
+    with open("pieces.json", "r") as f:
+        piece_list: list[dict] = json.load(f)
 
-for person in composers_list:
-    composers.append(Composer(**person))
+    with Session(engine) as session:
+        for composer_data in composers_list:
+            composer = Composer(**composer_data)
+            session.add(composer)
+        for piece_data in piece_list:
+            piece = Piece(**piece_data)
+            session.add(piece)
+        session.commit()
 
-for music in piece_list:
-    pieces.append(Piece(**music))
+
+@asynccontextmanager
+async def shutdown_logic():
+    engine.dispose()
+    logging.info("Database connections closed.")
+    logging.shutdown()
+
+
+app = FastAPI(lifespan=lifespan)
 
 
 @app.get("/composers")
-async def list_composers() -> list[Composer]:
-    return composers
+async def list_composers():
+    with Session(engine) as session:
+        result = session.exec(select(Composer)).all()
+        return result
 
 
 @app.get("/pieces")
-async def list_pieces(composer_id: int | None = None) -> list[Piece]:
-    if composer_id is not None:
-        return [piece for piece in pieces if piece.composer_id == composer_id]
-    else:
-        return pieces
-
-
+async def list_pieces():
+    with Session(engine) as session:
+        result = session.exec(select(Piece)).all()
+        return result
+"""
 @app.post("/composers")
 async def create_composer(person: Composer) -> None:
     if any(exisiting_composer.name == person.name for exisiting_composer in composers):
@@ -95,3 +133,4 @@ async def delete_piece(piece_name: str) -> None:
             pieces.pop(i)
             return "Piece deleted successfully"
     return "No piece exists with that name"
+"""
