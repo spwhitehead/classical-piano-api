@@ -1,6 +1,8 @@
 from sqlmodel import SQLModel, Field
 from typing import Optional
 
+metadata = SQLModel.metadata
+
 
 class Composer(SQLModel, table=True):
     composer_id: int = Field(
