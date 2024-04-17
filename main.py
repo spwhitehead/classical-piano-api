@@ -28,9 +28,12 @@ async def list_composers() -> list[Composer]:
     return composers
 
 
-@app.get("/pieses")
-async def list_pieces() -> list[Piece]:
-    return pieces
+@app.get("/pieces")
+async def list_pieces(composer_id: int | None = None) -> list[Piece]:
+    if composer_id is not None:
+        return [piece for piece in pieces if piece.composer_id == composer_id]
+    else:
+        return pieces
 
 
 @app.post("/composers")
@@ -47,7 +50,10 @@ async def create_piece(music: Piece) -> None:
     if any(existing_piece.name == music.name for existing_piece in pieces):
         raise HTTPException(
             status_code=400, detail="Piece name already exists")
-    pieces.append(music)
+    elif any(existing_composer.composer_id == music.composer_id for existing_composer in composers):
+        pieces.append(music)
+    raise HTTPException(
+        status_code=400, detail="No composer with that ID exists.")
 
 
 @app.put("/composers/{composer_id}")
@@ -62,6 +68,9 @@ async def update_composer(composer_id: int, updated_composer: Composer) -> None:
 
 @app.put("/pieces/{piece_name}")
 async def update_piece(piece_name: str, updated_piece: Piece) -> None:
+    if not any(existing_composer.composer_id == updated_piece.composer_id for existing_composer in composers):
+        raise HTTPException(
+            status_code=400, detail="Composer ID does not exist")
     if any(existing_piece.name == updated_piece.name for existing_piece in pieces):
         for i, piece in enumerate(pieces):
             if piece.name == piece_name:
