@@ -1,6 +1,6 @@
 # Classical Piano API
 
-A small FastAPI app that manages composers and pieces.
+A small FastAPI app that manages composers and pieces using SQLModel and a local PostgreSQL database.
 
 ## Endpoints
 
