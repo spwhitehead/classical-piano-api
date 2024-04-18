@@ -116,15 +116,17 @@ async def update_composer(composer_id: int, updated_composer: Composer, session:
     existing_composer = session.exec(select(Composer).where(
         Composer.composer_id == composer_id)).first()
     if existing_composer:
-        session.delete(existing_composer)
+        existing_composer.name = updated_composer.name
+        existing_composer.composer_id = updated_composer.composer_id
+        existing_composer.home_country = updated_composer.home_country
+        session.add(existing_composer)
+        session.commit()
+        session.refresh(existing_composer)
+        return f"Composer {updated_composer.name} updated successfully"
+    else:
         session.add(updated_composer)
         session.commit()
-        session.refresh(updated_composer)
-        return f"Composer {updated_composer.name} updated successfully"
-
-    session.add(updated_composer)
-    session.commit()
-    return f"No Composer with ID {composer_id} currently in database. Added {updated_composer.name} with ID {updated_composer.composer_id} successfully"
+        return f"No Composer with ID {composer_id} currently in database. Added {updated_composer.name} with ID {updated_composer.composer_id} successfully"
 
 
 @app.put("/pieces/{piece_name}")
